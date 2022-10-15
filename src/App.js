@@ -1,50 +1,55 @@
 import MovieCard from "./components/MovieCard";
-import { movieList } from "./components/MovieList";
 import Button from "react-bootstrap/Button";
-import "./App.css"
-import { useState } from "react";
+import "./App.css";
+import { useEffect, useState } from "react";
 import NewMovie from "./components/NewMovie";
 import Filter from "./components/Filter";
+import MovieList from "./components/MovieList";
+import data from "./data.json"
+
+
 
 function App() {
-  const [name, setName] = useState("default name");
-  const [description, setDescription] = useState("");
-  const [posterURL, setposterURL] = useState("");
-  const [rating, setRating] = useState(0);
-  const [listOfMovies, setList] = useState(movieList)
+
+  const movieList = data
+
+  const [listOfMovies, setList] = useState(movieList);
+  const [filteredList, setFilteredList] = useState([]);
+  const [newMovie, setNewMovie] = useState({})
+
+
+  useEffect(() => {
+    setFilteredList(listOfMovies)
+  } , [listOfMovies])
+
   const handleList = () => {
-    setList(previous => [...previous,
-    {
-      key:listOfMovies.length+1 , title: name, description: description, posterURL: posterURL, rating: rating
-    }]
-    )
+    setList((previous) => [newMovie, ...previous]);
+  };
+
+  function updateNewMovie(object) {
+    setNewMovie(object)
   }
 
-
-  const handleName = variable => setName(variable.target.value);
-  const handleDescription = event => setDescription(event.target.value);
-  const handlephotoURL = event => setposterURL(event.target.value);
-  const handleRating = event => setRating(event.target.value);
+  function filterList(newList) {
+    setFilteredList(newList)
+  }
 
   return (
     <div className="appbody">
       <h1>Hooks Checkpoint Flix</h1>
       <div className="newmovie">
-        <NewMovie
-          handleDescription={handleDescription}
-          handleName={handleName}
-          handlephotoURL={handlephotoURL}
-          handleRating={handleRating}
-        />
-        <Button variant="primary" onClick={handleList}>Add New movie</Button>
+        <NewMovie update={(object) => updateNewMovie(object)} quantity={listOfMovies.length} />
+        <Button variant="primary" onClick={handleList}>
+          Add New movie
+        </Button>
       </div>
-      <Filter list={listOfMovies} />
+      <Filter list={listOfMovies} updateList={filterList} />
+      <MovieList filteredList={filteredList} />
     </div>
   );
 }
 
 export default App;
-
 
 // Instructions:
 // Create the following components:

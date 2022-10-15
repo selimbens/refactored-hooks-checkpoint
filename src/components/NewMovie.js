@@ -1,44 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const NewMovie = (props) => {
-    return (
-        <form>
-            <label htmlFor="name">Film Title :</label>
-            <input
-                type="text"
-                name="name"
-                // value={props.name}
-                onChange={props.handleName}
-            />
-<br/>
-            <label htmlFor="description">Movie Description :</label>
-            <input
-                type="text"
-                name="description"
-                // value={props.description}
-                onChange={props.handleDescription}
-            />
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [posterURL, setposterURL] = useState("");
+  const [rating, setRating] = useState(0);
 
-<br/>
-            <label htmlFor="photoURL">Photo URL :</label>
-            <input
-                type="url"
-                name="photoURL"
-                // value={props.photoURL}
-                onChange={props.handlephotoURL}
-            />
-<br/>
 
-            <label htmlFor="rating">Movie rating :</label>
-            <input
-                type="number"
-                name="rating"
-                // value={props.rating}
-                onChange={props.handleRating}
-            />
-<br/>
-        </form>
-    )
-}
+  useEffect(() => {
+    handleChange()
+  }, [name,description,posterURL, rating])
 
-export default NewMovie
+  const update = props.update;
+
+  const quantity = props.quantity;
+
+  function handleChange() {
+    const newMovie = {
+      id: quantity + 1,
+      title: name,
+      description: description,
+      posterURL: posterURL,
+      rating: rating,
+    };
+    update(newMovie);
+  }
+
+  return (
+    <form>
+      <label htmlFor="name">Film Title :</label>
+      <input
+        type="text"
+        name="name"
+        onChange={event => { setName(event.target.value) }} />
+      <br />
+      <label htmlFor="description">Movie Description :</label>
+      <input
+        type="text"
+        name="description"
+        onChange={event => { setDescription(event.target.value) }}
+      />
+
+      <br />
+      <label htmlFor="photoURL">Photo URL :</label>
+      <input
+        type="url"
+        name="photoURL"
+        onChange={event => { setposterURL(event.target.value) }}
+      />
+      <br />
+
+      <label htmlFor="rating">Movie rating :</label>
+      <input
+        type="number"
+        name="rating"
+        onChange={event => { setRating(event.target.value) }}
+      />
+      <br />
+    </form>
+  );
+};
+
+export default NewMovie;
